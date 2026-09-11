@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://orcagestor.github.io/sitemap.xml
