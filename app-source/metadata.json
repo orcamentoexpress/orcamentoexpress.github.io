@@ -1,0 +1,5 @@
+{
+  "name": "Orçamento Express",
+  "description": "Sistema moderno e offline de orçamentos e propostas com múltiplos modelos de PDF, envio via WhatsApp, gestão de clientes, carteira financeira e sincronização em nuvem.",
+  "requestFramePermissions": []
+}

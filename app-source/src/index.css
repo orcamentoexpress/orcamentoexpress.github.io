@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.4);
+}
+
+/* Safe area padding for standalone mobile */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+.pt-safe {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+
+/* PDF document rendering container (A4 aspect ratio) */
+.pdf-sheet {
+  width: 794px; /* A4 width at 96 DPI: 210mm */
+  min-height: 1123px; /* A4 height at 96 DPI: 297mm */
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .pdf-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 20mm !important;
+    width: 100% !important;
+    min-height: auto !important;
+  }
+}

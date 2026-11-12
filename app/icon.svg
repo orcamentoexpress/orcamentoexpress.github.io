@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="doc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f1f5f9" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded rect -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)" />
+
+  <!-- Document Sheet -->
+  <g filter="url(#shadow)">
+    <rect x="120" y="88" width="272" height="336" rx="28" fill="url(#doc)" />
+    
+    <!-- Header Banner on Document -->
+    <path d="M 120 116 Q 120 88 148 88 L 364 88 Q 392 88 392 116 L 392 144 L 120 144 Z" fill="#2563eb" />
+    
+    <!-- Content lines -->
+    <rect x="160" y="180" width="120" height="14" rx="7" fill="#94a3b8" />
+    <rect x="160" y="210" width="192" height="12" rx="6" fill="#cbd5e1" />
+    <rect x="160" y="234" width="160" height="12" rx="6" fill="#e2e8f0" />
+    
+    <!-- Table items mockup -->
+    <rect x="160" y="270" width="192" height="2" fill="#e2e8f0" />
+    <rect x="160" y="286" width="90" height="10" rx="5" fill="#94a3b8" />
+    <rect x="300" y="286" width="52" height="10" rx="5" fill="#64748b" />
+    
+    <rect x="160" y="310" width="192" height="2" fill="#e2e8f0" />
+    <rect x="160" y="324" width="80" height="10" rx="5" fill="#94a3b8" />
+    <rect x="300" y="324" width="52" height="10" rx="5" fill="#64748b" />
+  </g>
+
+  <!-- Floating Approved / Money Badge -->
+  <circle cx="360" cy="372" r="64" fill="url(#accent)" filter="url(#shadow)" />
+  <path d="M334 372 L352 390 L388 354" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+</svg>
