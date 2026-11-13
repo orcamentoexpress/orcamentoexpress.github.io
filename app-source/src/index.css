@@ -71,6 +71,22 @@
   padding-top: max(0.5rem, env(safe-area-inset-top));
 }
 
+/* The mobile navigation is fixed over the viewport. Keep the app footer
+   fully reachable above it, including iOS/Android safe-area insets. */
+.app-footer {
+  position: relative;
+  z-index: 10;
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  scroll-margin-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .app-footer {
+    padding-bottom: 0;
+    scroll-margin-bottom: 0;
+  }
+}
+
 /* PDF document rendering container (A4 aspect ratio) */
 .pdf-sheet {
   width: 794px; /* A4 width at 96 DPI: 210mm */

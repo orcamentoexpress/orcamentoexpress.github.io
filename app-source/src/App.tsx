@@ -350,7 +350,7 @@ export default function App() {
       )}
 
       {/* Footer: Desenvolvido por Saulomgg & Apoie o Projeto */}
-      <footer className="mt-auto mb-16 md:mb-0">
+      <footer className="app-footer mt-auto mb-16 md:mb-0">
         <FooterBadge
           onOpenApoio={() => {
             setIsEditingQuote(false);
