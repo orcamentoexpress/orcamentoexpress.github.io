@@ -37,7 +37,6 @@ import {
   Share2,
   AlertTriangle,
   X,
-  FolderArchive,
   Rocket,
   Bug,
   Zap,
@@ -101,7 +100,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       const reader = new FileReader();
       reader.onload = (evt) => {
         const base64 = evt.target?.result as string;
-        handleCompanyChange('logoUrl', base64);
+        const updatedCompany = { ...company, logoUrl: base64 };
+        setCompany(updatedCompany);
+        // Persiste a imagem mesmo que o usuário saia da tela sem clicar em salvar.
+        onUpdateCompany(updatedCompany);
+        showToast('Logo salva no perfil da empresa.', 'success');
       };
       reader.readAsDataURL(file);
     }
@@ -175,10 +178,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   const handleExportBackup = () => {
     exportBackupJSON(appData);
     showToast('Backup baixado com sucesso! Arquivo salvo em Downloads.', 'success');
-  };
-
-  const handleDownloadZip = () => {
-    window.open('https://github.com/saulomgg/orcamento-express', '_blank', 'noopener,noreferrer');
   };
 
   const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1038,15 +1037,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 />
               </label>
 
-              <button
-                type="button"
-                onClick={handleDownloadZip}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/40 text-indigo-200 border border-indigo-500/50 font-bold transition shadow-sm active:scale-95 cursor-pointer"
-                title="Abrir o código-fonte do projeto no GitHub"
-              >
-                <FolderArchive className="w-4 h-4 text-indigo-400" />
-                <span>Ver código-fonte no GitHub</span>
-              </button>
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { PWAInstallButton } from './PWAInstallButton';
+import { CompanyProfile } from '../types';
 
 export type NavigationTab = 'wallet' | 'quotes' | 'clients' | 'settings';
 
@@ -20,6 +21,7 @@ interface NavigationProps {
   quotesCount: number;
   clientsCount: number;
   lastSyncedAt?: string;
+  company: CompanyProfile;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
@@ -29,7 +31,13 @@ export const Navigation: React.FC<NavigationProps> = ({
   quotesCount,
   clientsCount,
   lastSyncedAt,
+  company,
 }) => {
+  const brandName = company.tradingName?.trim() || company.name?.trim() || 'Orçamento Express';
+  const brandSecondary = company.tradingName?.trim() && company.name?.trim() && company.tradingName.trim() !== company.name.trim()
+    ? company.name
+    : 'Orçamento Express';
+
   return (
     <>
       {/* Desktop & Tablet Top Header */}
@@ -37,19 +45,20 @@ export const Navigation: React.FC<NavigationProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => onSelectTab('wallet')}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-md shadow-emerald-950/40">
-              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                <FileText className="w-5 h-5 text-emerald-400" />
+            {company.logoUrl ? (
+              <img src={company.logoUrl} alt={`Logo de ${brandName}`} className="w-10 h-10 rounded-xl object-contain bg-white p-0.5 border border-slate-700 shadow-md shadow-emerald-950/40" />
+            ) : (
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-md shadow-emerald-950/40">
+                <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-emerald-400" />
+                </div>
               </div>
-            </div>
+            )}
             <div>
               <span className="text-base font-black tracking-tight text-white flex items-center gap-1.5">
-                <span>Orçamento Express</span>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  PRO
-                </span>
+                <span className="max-w-[15rem] truncate">{brandName}</span>
               </span>
-              <p className="text-[10px] text-slate-400 font-medium">Offline & Nuvem Integrada</p>
+              <p className="text-[10px] text-slate-400 font-medium max-w-[15rem] truncate">{brandSecondary}</p>
             </div>
           </div>
 

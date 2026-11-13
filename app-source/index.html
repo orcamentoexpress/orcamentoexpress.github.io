@@ -7,23 +7,13 @@
       (function() {
         try {
           var origFetch = window.fetch;
-          var desc = Object.getOwnPropertyDescriptor(window, 'fetch') ||
-                     Object.getOwnPropertyDescriptor(Object.getPrototypeOf(window), 'fetch');
+          var desc = Object.getOwnPropertyDescriptor(window, 'fetch') || Object.getOwnPropertyDescriptor(Object.getPrototypeOf(window), 'fetch');
           if (!desc || !desc.set || !desc.writable) {
-            Object.defineProperty(window, 'fetch', {
-              get: function() { return origFetch; },
-              set: function(fn) { origFetch = fn; },
-              configurable: true,
-              enumerable: true
-            });
+            Object.defineProperty(window, 'fetch', { get: function() { return origFetch; }, set: function(fn) { origFetch = fn; }, configurable: true, enumerable: true });
           }
         } catch (err) {}
-
         window.addEventListener('error', function(event) {
-          if (
-            (event.filename && event.filename.includes('chrome-extension://')) ||
-            (event.message && event.message.includes('Cannot set property fetch'))
-          ) {
+          if ((event.filename && event.filename.includes('chrome-extension://')) || (event.message && event.message.includes('Cannot set property fetch'))) {
             event.preventDefault();
             if (event.stopImmediatePropagation) event.stopImmediatePropagation();
             return true;
@@ -43,7 +33,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="OrçExpress" />
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
-    <link rel="icon" type="image/svg+xml" href="%BASE_URL%icon.svg" />
+    <link rel="icon" type="image/png" href="%BASE_URL%favicon-64.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">

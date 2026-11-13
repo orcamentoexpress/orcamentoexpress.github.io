@@ -15,6 +15,18 @@ export async function createPdfFromElement(
 ): Promise<jsPDF> {
   const filename = options.filename || 'orcamento.pdf';
 
+  // Aguarda logos/imagens antes da captura para que o PDF não saia vazio ou incompleto.
+  const images = Array.from(element.querySelectorAll('img'));
+  await Promise.all(
+    images.map((image) => {
+      if (image.complete) return Promise.resolve();
+      return new Promise<void>((resolve) => {
+        image.addEventListener('load', () => resolve(), { once: true });
+        image.addEventListener('error', () => resolve(), { once: true });
+      });
+    }),
+  );
+
   // Render to canvas with high resolution scale
   const canvas = await html2canvas(element, {
     scale: 2, // 2x crispness without excessive memory
@@ -64,7 +76,16 @@ export async function downloadPdfFromElement(
   filename: string
 ): Promise<void> {
   const pdf = await createPdfFromElement(element, { filename });
-  pdf.save(filename);
+  const blob = pdf.output('blob');
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.rel = 'noopener';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 /**

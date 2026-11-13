@@ -152,22 +152,32 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
       const filename = `Orcamento_${quote.code}.pdf`;
       const file = await getPdfFileFromElement(previewSheetRef.current, filename);
 
-      if (navigator.share) {
+      if (navigator.share && canShareFiles) {
         await navigator.share({
           title: `Orçamento ${quote.code} - ${company.name}`,
           text: whatsappMsg,
           files: [file],
         });
         onUpdateStatus(quote.id, 'enviado');
+      } else {
+        await downloadPdfFromElement(previewSheetRef.current, filename);
+        openWhatsAppWithMessage();
       }
     } catch (err) {
-      console.log('Share dismissed or not supported', err);
+      console.log('Share dismissed or not supported, using download fallback', err);
+      try {
+        const filename = `Orcamento_${quote.code}.pdf`;
+        await downloadPdfFromElement(previewSheetRef.current, filename);
+        openWhatsAppWithMessage();
+      } catch (fallbackError) {
+        console.error('Fallback de PDF também falhou', fallbackError);
+      }
     } finally {
       setIsGeneratingPdf(false);
     }
   };
 
-  const handleSendWhatsAppChat = () => {
+  const openWhatsAppWithMessage = () => {
     const cleanPhone = (quote.clientPhone || '').replace(/\D/g, '');
     let fullPhone = cleanPhone;
     if (fullPhone.length === 10 || fullPhone.length === 11) {
@@ -182,6 +192,22 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
     window.open(url, '_blank');
     onUpdateStatus(quote.id, 'enviado');
     setShowWhatsAppEditor(false);
+  };
+
+  const handleSendWhatsAppChat = async () => {
+    if (!previewSheetRef.current) return;
+    try {
+      setIsGeneratingPdf(true);
+      const filename = `Orcamento_${quote.code}.pdf`;
+      // O WhatsApp Web não permite anexar um arquivo por wa.me automaticamente.
+      // Baixamos o PDF primeiro e abrimos a conversa com a mensagem pronta.
+      await downloadPdfFromElement(previewSheetRef.current, filename);
+      openWhatsAppWithMessage();
+    } catch (err) {
+      console.error('Não foi possível preparar o PDF para o WhatsApp', err);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   const handleApproveWithConfetti = () => {
@@ -334,7 +360,7 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
             />
             <div className="flex items-center justify-between mt-2.5">
               <p className="text-[11px] text-slate-400">
-                O link abrirá o WhatsApp do cliente com a mensagem preenchida.
+                O PDF será baixado e o WhatsApp abrirá com a mensagem preenchida. Anexe o arquivo baixado na conversa.
               </p>
               <button
                 onClick={handleSendWhatsAppChat}

@@ -260,6 +260,7 @@ export default function App() {
         quotesCount={data.quotes.length}
         clientsCount={data.clients.length}
         lastSyncedAt={data.cloudSync?.lastSyncedAt}
+        company={data.company}
       />
 
       {/* Main Content Area */}

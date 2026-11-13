@@ -3,15 +3,15 @@ import { AppData, Client, CompanyProfile, Quote } from '../types';
 const STORAGE_KEY = 'orcamento_express_data_v2';
 
 export const DEFAULT_COMPANY: CompanyProfile = {
-  name: 'saulomgg dev lab',
-  tradingName: 'Studio Lab',
-  document: '42.891.034/0001-90',
-  phone: '11999887766',
-  email: 'saulomgg.github.io',
-  address: 'saulomgg.github.io',
+  name: 'Orçamento Express',
+  tradingName: 'Sua Empresa',
+  document: '',
+  phone: '',
+  email: '',
+  address: '',
   city: 'São Paulo - SP',
   logoUrl: '',
-  pixKey: 'saulomg2@hotmail.com',
+  pixKey: '',
   pixKeyType: 'email',
   defaultWarranty: 'Garantia legal de 90 dias conforme CDC sobre serviços executados e peças instaladas.',
   defaultPaymentTerms: '50% de entrada no aceite e 50% na conclusão e entrega, via PIX, boleto ou link de pagamento.',
@@ -269,8 +269,8 @@ export function loadAppData(): AppData {
     if (loadedCompany.address === 'Av. Paulista, 1000 - Bela Vista') {
       loadedCompany.address = 'saulomgg.github.io';
     }
-    if (loadedCompany.pixKey === 'contato@saulomgg.github.io') {
-      loadedCompany.pixKey = 'saulomg2@hotmail.com';
+    if (loadedCompany.pixKey === 'contato@saulomgg.github.io' || loadedCompany.pixKey === 'saulomg2@hotmail.com') {
+      loadedCompany.pixKey = '';
     }
 
     return {
