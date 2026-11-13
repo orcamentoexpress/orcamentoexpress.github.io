@@ -5,7 +5,9 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
-  const base = process.env.VITE_BASE_PATH || '/';
+  // The production app is served from /app/ in the official site repository.
+  // VITE_BASE_PATH can still override this for a different deployment.
+  const base = process.env.VITE_BASE_PATH || '/app/';
 
   return {
     base,
