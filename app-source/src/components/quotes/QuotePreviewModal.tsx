@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { CompanyProfile, PDFTheme, Quote, QuoteStatus } from '../../types';
 import { TemplateRenderer } from './templates/TemplateRenderer';
 import { generatePixPayload, generatePixQRCodeDataUrl } from '../../services/pix';
-import { downloadPdfFromQuote, getPdfFileFromQuote, formatCurrencyBRL, formatDateBR } from '../../services/pdfGenerator';
+import { downloadQuotePdf, getQuotePdfFile, formatCurrencyBRL, formatDateBR } from '../../services/pdfGenerator';
 import confetti from 'canvas-confetti';
 import {
   X,
@@ -48,6 +48,7 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
 
   const previewSheetRef = useRef<HTMLDivElement>(null);
   const previewContainerRef = useRef<HTMLDivElement>(null);
+  const exportSheetRef = useRef<HTMLDivElement>(null);
 
   // Generate PIX QR Code
   useEffect(() => {
@@ -139,12 +140,24 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
     try {
       setIsGeneratingPdf(true);
       const filename = `Orcamento_${quote.code}_${quote.clientName.replace(/\s+/g, '_')}.pdf`;
-      downloadPdfFromQuote({ quote, company, theme: selectedTheme }, filename);
+      await waitForPixQr();
+      await downloadQuotePdf(exportSheetRef.current, pdfData(), filename);
     } catch (err) {
       console.error('Erro ao gerar PDF', err);
     } finally {
       setIsGeneratingPdf(false);
     }
+  };
+
+  const pdfData = () => ({ quote, company, theme: selectedTheme });
+
+  // Garante que o QR Code do PIX já carregou antes de capturar o modelo.
+  const waitForPixQr = async () => {
+    if (!(quote.includePixQr && company.pixKey)) return;
+    for (let i = 0; i < 20 && !pixQrCodeUrl; i += 1) {
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    await new Promise((r) => setTimeout(r, 150));
   };
 
   const handlePrint = () => {
@@ -155,7 +168,8 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
     try {
       setIsGeneratingPdf(true);
       const filename = `Orcamento_${quote.code}.pdf`;
-      const file = getPdfFileFromQuote({ quote, company, theme: selectedTheme }, filename);
+      await waitForPixQr();
+      const file = await getQuotePdfFile(exportSheetRef.current, pdfData(), filename);
 
       if (navigator.share && canShareFiles) {
         await navigator.share({
@@ -165,14 +179,14 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
         });
         onUpdateStatus(quote.id, 'enviado');
       } else {
-        downloadPdfFromQuote({ quote, company, theme: selectedTheme }, filename);
+        await downloadQuotePdf(exportSheetRef.current, pdfData(), filename);
         openWhatsAppWithMessage();
       }
     } catch (err) {
       console.log('Share dismissed or not supported, using download fallback', err);
       try {
         const filename = `Orcamento_${quote.code}.pdf`;
-        downloadPdfFromQuote({ quote, company, theme: selectedTheme }, filename);
+        await downloadQuotePdf(exportSheetRef.current, pdfData(), filename);
         openWhatsAppWithMessage();
       } catch (fallbackError) {
         console.error('Fallback de PDF também falhou', fallbackError);
@@ -205,7 +219,8 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
       const filename = `Orcamento_${quote.code}.pdf`;
       // O WhatsApp Web não permite anexar um arquivo por wa.me automaticamente.
       // Baixamos o PDF primeiro e abrimos a conversa com a mensagem pronta.
-      downloadPdfFromQuote({ quote, company, theme: selectedTheme }, filename);
+      await waitForPixQr();
+      await downloadQuotePdf(exportSheetRef.current, pdfData(), filename);
       openWhatsAppWithMessage();
     } catch (err) {
       console.error('Não foi possível preparar o PDF para o WhatsApp', err);
@@ -399,6 +414,22 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
                 forcedTheme={selectedTheme}
               />
             </div>
+          </div>
+        </div>
+
+        {/* Cópia em tamanho real (A4, sem zoom) usada só para gerar o PDF idêntico ao modelo */}
+        <div
+          aria-hidden="true"
+          style={{ position: 'fixed', left: -10000, top: 0, width: 794, pointerEvents: 'none', zIndex: -1 }}
+        >
+          <div ref={exportSheetRef} style={{ width: 794, background: '#ffffff' }}>
+            <TemplateRenderer
+              quote={quote}
+              company={company}
+              pixQrCodeUrl={pixQrCodeUrl}
+              pixPayload={pixPayload}
+              forcedTheme={selectedTheme}
+            />
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import { CompanyProfile, PDFTheme, Quote } from '../types';
 
 export interface PDFExportOptions {
@@ -253,45 +253,145 @@ export function getPdfFileFromQuote(data: QuotePdfData, filename: string): File 
   return new File([pdf.output('blob')], filename, { type: 'application/pdf' });
 }
 
-/** Legacy DOM export retained for compatibility with older callers. */
+const A4_WIDTH_PX = 794; // 210mm a 96 DPI
+const A4_HEIGHT_PX = 1123; // 297mm a 96 DPI
+const CAPTURE_SCALE = 2;
+
+async function waitForAssets(element: HTMLElement): Promise<void> {
+  try {
+    if ('fonts' in document) await (document as Document & { fonts: FontFaceSet }).fonts.ready;
+  } catch {
+    // fontes são opcionais
+  }
+  const images = Array.from(element.querySelectorAll('img'));
+  await Promise.all(
+    images.map((img) =>
+      img.complete && img.naturalWidth > 0
+        ? Promise.resolve()
+        : new Promise<void>((resolve) => {
+            img.addEventListener('load', () => resolve(), { once: true });
+            img.addEventListener('error', () => resolve(), { once: true });
+            window.setTimeout(resolve, 4000);
+          })
+    )
+  );
+  // dá um respiro para o layout assentar antes da captura
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
+
+/** Procura, perto do corte, uma linha de pixels em branco para não cortar texto ao meio. */
+function findSafeCut(canvas: HTMLCanvasElement, target: number, minY: number): number {
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return target;
+  const width = canvas.width;
+  const searchStart = Math.min(target, canvas.height);
+  const searchEnd = Math.max(minY, searchStart - Math.round(140 * CAPTURE_SCALE));
+  for (let y = searchStart; y > searchEnd; y -= 2) {
+    const row = ctx.getImageData(0, y, width, 1).data;
+    const r = row[0], g = row[1], b = row[2];
+    let uniform = true;
+    for (let x = 0; x < width * 4; x += 16) {
+      if (Math.abs(row[x] - r) > 6 || Math.abs(row[x + 1] - g) > 6 || Math.abs(row[x + 2] - b) > 6) {
+        uniform = false;
+        break;
+      }
+    }
+    if (uniform) return y;
+  }
+  return target;
+}
+
+/**
+ * Gera o PDF a partir do MESMO modelo (template) mostrado na tela: captura o elemento
+ * em tamanho real A4 (sem transform/zoom) e divide em páginas A4.
+ * Usa html2canvas-pro porque o Tailwind v4 usa cores oklch(), que o html2canvas original
+ * não entende (causava PDF em branco / quebrado).
+ */
 export async function createPdfFromElement(element: HTMLElement, options: PDFExportOptions = {}): Promise<jsPDF> {
-  const filename = options.filename || 'orcamento.pdf';
+  void options;
+  await waitForAssets(element);
+
+  const width = Math.max(element.scrollWidth, A4_WIDTH_PX);
+  const height = element.scrollHeight;
   const canvas = await html2canvas(element, {
-    scale: 2,
+    scale: CAPTURE_SCALE,
     useCORS: true,
+    allowTaint: false,
     logging: false,
     backgroundColor: '#ffffff',
-    width: element.scrollWidth,
-    height: element.scrollHeight,
-    windowWidth: element.scrollWidth,
-    windowHeight: element.scrollHeight,
+    width,
+    height,
+    windowWidth: width,
+    windowHeight: height,
     scrollX: 0,
     scrollY: 0,
   });
-  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  const imgWidth = 210;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  const imgData = canvas.toDataURL('image/jpeg', 0.95);
-  let heightLeft = imgHeight;
-  let position = 0;
-  pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-  heightLeft -= 297;
-  while (heightLeft > 0) {
-    position = heightLeft - imgHeight;
-    pdf.addPage();
-    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-    heightLeft -= 297;
+
+  if (!canvas.width || !canvas.height) throw new Error('Captura do documento retornou vazia');
+
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+  const pageHeightPx = Math.round((canvas.width * 297) / 210);
+  const minSlice = Math.round(pageHeightPx * 0.55);
+
+  let offset = 0;
+  let pageIndex = 0;
+  while (offset < canvas.height - 2) {
+    let end = offset + pageHeightPx;
+    if (end >= canvas.height) {
+      end = canvas.height;
+    } else {
+      end = findSafeCut(canvas, end, offset + minSlice);
+    }
+    const sliceHeight = end - offset;
+
+    const page = document.createElement('canvas');
+    page.width = canvas.width;
+    page.height = pageHeightPx;
+    const pctx = page.getContext('2d');
+    if (!pctx) throw new Error('Canvas 2D indisponível');
+    pctx.fillStyle = '#ffffff';
+    pctx.fillRect(0, 0, page.width, page.height);
+    pctx.drawImage(canvas, 0, offset, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+
+    if (pageIndex > 0) pdf.addPage();
+    pdf.addImage(page.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+
+    offset = end;
+    pageIndex += 1;
+    if (pageIndex > 30) break; // proteção contra loop
   }
   return pdf;
 }
 
+/** Tenta o modelo real; se falhar, usa o layout nativo como plano B para nunca ficar sem PDF. */
+export async function buildQuotePdf(element: HTMLElement | null, data: QuotePdfData): Promise<jsPDF> {
+  if (element) {
+    try {
+      return await createPdfFromElement(element);
+    } catch (err) {
+      console.error('Falha ao capturar o modelo, usando layout nativo', err);
+    }
+  }
+  return createPdfFromQuote(data);
+}
+
+export async function downloadQuotePdf(element: HTMLElement | null, data: QuotePdfData, filename: string): Promise<void> {
+  const pdf = await buildQuotePdf(element, data);
+  triggerBlobDownload(pdf.output('blob'), filename);
+}
+
+export async function getQuotePdfFile(element: HTMLElement | null, data: QuotePdfData, filename: string): Promise<File> {
+  const pdf = await buildQuotePdf(element, data);
+  return new File([pdf.output('blob')], filename, { type: 'application/pdf' });
+}
+
 export async function downloadPdfFromElement(element: HTMLElement, filename: string): Promise<void> {
-  const pdf = await createPdfFromElement(element, { filename });
+  const pdf = await createPdfFromElement(element);
   triggerBlobDownload(pdf.output('blob'), filename);
 }
 
 export async function getPdfFileFromElement(element: HTMLElement, filename: string): Promise<File> {
-  const pdf = await createPdfFromElement(element, { filename });
+  const pdf = await createPdfFromElement(element);
   return new File([pdf.output('blob')], filename, { type: 'application/pdf' });
 }
 
