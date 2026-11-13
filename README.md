@@ -1,76 +1,144 @@
-🧾 Orçamento Express
-Seu orçamento, do seu jeito e sem complicação.
+<div align="center">
 
-100% gratuito · sem cadastro · funciona offline · código aberto
+# ORÇAMENTO EXPRESS
 
-Crie propostas profissionais em PDF, organize clientes e acompanhe seus resultados, mesmo quando a internet não estiver por perto.
+### `Gratuito` · `Privado` · `Offline`
 
-Usar grátis Site Blog Apoie os projetos
+[![App](https://img.shields.io/badge/app-usar_grátis-00e5ff?style=for-the-badge&logo=github)](https://orcamentoexpress.github.io/app/)
+[![Site](https://img.shields.io/badge/site-oficial-00b894?style=for-the-badge)](https://orcamentoexpress.github.io/)
+[![Blog](https://img.shields.io/badge/blog-artigos-ff3333?style=for-the-badge)](https://orcamentoexpress.github.io/blog.html)
+[![Apoie](https://img.shields.io/badge/apoie-os_projetos-009EE3?style=for-the-badge&logo=mercadopago&logoColor=white)](https://link.mercadopago.com.br/saulomgg)
 
-✨ O que você pode fazer
-	Recurso	Detalhes
-📄	Propostas profissionais	Orçamentos com sua marca, condições, validade, itens, descontos e vários modelos de PDF
-💰	Custos e resultados	Acompanhe propostas, status, valores, conversão e ganhos em uma visão clara
-👥	Clientes organizados	Históricos, dados e contatos num só lugar, sem planilhas espalhadas
-💬	Envio fácil	Compartilhe o PDF ou uma mensagem formatada pelo WhatsApp
-🔳	PIX no documento	QR Code PIX direto no orçamento, usando a sua própria chave
-💾	Backup sob seu controle	Exporte seus dados em JSON ou CSV quando quiser
-🔐 Privacidade de verdade
+</div>
 
-Nem o desenvolvedor precisa saber quem usa.
+---
 
-Sem cadastro: abra o app e comece. Não existe conta central acompanhando seu uso
-Dados com você: por padrão ficam no navegador e no aparelho que você usa
-Funciona offline: depois do primeiro acesso, criar, editar, consultar, gerar PDF e fazer backup não precisam de internet
-Nuvem opcional: se quiser sincronizar, você configura a sua própria planilha Google. Nada é enviado automaticamente
-Código aberto: o projeto é público para ser acompanhado, estudado e melhorado
+## `> whoami`
 
-WhatsApp, sincronização e links externos precisam de conexão.
+```bash
+$ cat /dev/orcamentoexpress
+Nome:   Orçamento Express
+Preço:  grátis, sem mensalidade
+Foco:   propostas em PDF, clientes e resultados
+Modo:   PWA offline · sem cadastro
+```
 
-🚀 Como começar
-Acesse orcamentoexpress.github.io/app
-Para usar como app, instale pelo navegador (menu → Adicionar à tela inicial)
-Crie seu primeiro orçamento e envie em PDF
+App **gratuito** para criar **orçamentos profissionais** em PDF, organizar clientes e acompanhar seus resultados, mesmo quando a internet não estiver por perto. Seus dados ficam no **seu dispositivo** e você começa a usar **sem criar conta**.
 
-Sem conta, sem mensalidade e sem recursos essenciais bloqueados.
+---
 
-🔗 Links
-O quê	Endereço
-🌐 Site	https://orcamentoexpress.github.io/
-📱 App	https://orcamentoexpress.github.io/app/
-📝 Blog	https://orcamentoexpress.github.io/blog.html
-💛 Apoio	https://link.mercadopago.com.br/saulomgg
-👨‍💻 Criador	https://saulomgg.github.io
-💛 Apoie os projetos
+## `> ls ./recursos`
+
+| Recurso | Detalhes |
+|---------|----------|
+| 📄 **Propostas profissionais** | Orçamentos com sua marca, condições, validade, itens, descontos e vários modelos de PDF |
+| 💰 **Custos e resultados** | Acompanhe propostas, status, valores, conversão e ganhos em uma visão clara |
+| 👥 **Clientes organizados** | Históricos, dados e contatos num só lugar, sem planilhas espalhadas |
+| 💬 **Envio fácil** | Compartilhe o PDF ou uma mensagem formatada pelo WhatsApp |
+| 🔳 **PIX no documento** | QR Code PIX direto no orçamento, usando a sua própria chave |
+| 💾 **Backup sob seu controle** | Exporte seus dados em JSON ou CSV quando quiser |
+
+---
+
+## `> cat ./privacidade`
+
+```json
+{
+  "cadastro": false,
+  "mensalidade": 0,
+  "dados": "ficam no seu dispositivo",
+  "offline": "depois do primeiro acesso",
+  "nuvem": "opcional, a sua própria planilha Google",
+  "codigo": "disponível para consulta"
+}
+```
+
+- **Sem cadastro** — abra o app e comece, não existe conta central acompanhando seu uso
+- **Dados com você** — por padrão ficam no navegador e no aparelho que você usa
+- **Funciona offline** — criar, editar, consultar, gerar PDF e fazer backup não precisam de internet
+- **Nuvem opcional** — se quiser sincronizar, você configura a sua planilha. Nada é enviado automaticamente
+
+> [!NOTE]
+> WhatsApp, sincronização e links externos precisam de conexão com a internet.
+
+---
+
+## `> ./iniciar`
+
+```bash
+1. Acesse   orcamentoexpress.github.io/app
+2. Instale  menu do navegador → "Adicionar à tela inicial"
+3. Use      crie seu primeiro orçamento e envie em PDF
+```
+
+[▶ **Abrir o app grátis**](https://orcamentoexpress.github.io/app/)
+
+---
+
+## `> cat ./faq`
+
+| Pergunta | Resposta |
+|----------|----------|
+| É realmente gratuito? | Sim. Sem mensalidade e sem bloqueio de recursos essenciais |
+| Funciona sem internet? | Sim, depois que o app for carregado uma primeira vez |
+| Onde ficam meus dados? | Por padrão, no armazenamento local do seu navegador. A sincronização com Google Sheets é opcional |
+| E os backups JSON/CSV? | Pertencem somente ao app e não são baixados pelo site. Cada pessoa gera e guarda o próprio backup |
+
+---
+
+## `> ping apoio`
 
 O Orçamento Express é gratuito e independente. Uma contribuição voluntária, de qualquer valor, ajuda a manter o projeto, corrigir bugs e criar outras ferramentas gratuitas.
 
-Apoiar não libera recursos pagos, não cria mensalidade e não muda a privacidade do app.
+> [!TIP]
+> Apoiar não libera recursos pagos, não cria mensalidade e não muda a privacidade do app.
 
-Apoie os projetos
+<div align="center">
 
-❓ Dúvidas comuns
+[![Apoie os projetos](https://img.shields.io/badge/💛_Apoie_os_projetos-009EE3?style=for-the-badge&logo=mercadopago&logoColor=white)](https://link.mercadopago.com.br/saulomgg)
 
-É realmente gratuito? Sim. É gratuito para usar, sem mensalidade e sem bloqueio de recursos essenciais.
+</div>
 
-Funciona sem internet? Sim, depois que o app for carregado uma primeira vez.
+---
 
-Onde ficam meus dados? Por padrão, no armazenamento local do seu próprio navegador. A sincronização com Google Sheets é opcional e configurada por você.
+## `> ping links`
 
-E os arquivos de backup JSON/CSV? Pertencem somente ao aplicativo e não são baixados pelo site. Cada pessoa gera e guarda o próprio backup.
+| Canal | Link |
+|-------|------|
+| Site | [orcamentoexpress.github.io](https://orcamentoexpress.github.io/) |
+| App | [orcamentoexpress.github.io/app](https://orcamentoexpress.github.io/app/) |
+| Blog | [orcamentoexpress.github.io/blog.html](https://orcamentoexpress.github.io/blog.html) |
+| Apoio | [Mercado Pago](https://link.mercadopago.com.br/saulomgg) |
+| Criador | [saulomgg.github.io](https://saulomgg.github.io) |
 
-⚖️ Licença e direitos autorais
+---
 
-© 2026 Saulo (saulomgg). Todos os direitos reservados.
+## `> cat ./LICENSE`
 
-O código-fonte, o design, os textos e a marca do Orçamento Express são protegidos pela Lei nº 9.609/1998 (Lei do Software) e pela Lei nº 9.610/1998 (Lei de Direitos Autorais). O código está disponível para consulta e estudo.
+<sub>© 2026 Saulo (saulomgg). **Todos os direitos reservados.**</sub>
 
-Uso do app: é livre e gratuito para você criar os orçamentos do seu próprio trabalho.
+<sub>O código-fonte, o design, os textos e a marca do Orçamento Express são protegidos pela Lei nº 9.609/1998 (Lei do Software) e pela Lei nº 9.610/1998 (Lei de Direitos Autorais). O código está disponível para consulta e estudo.</sub>
 
-É proibido comercializar, revender, sublicenciar ou redistribuir este projeto, ou cópias dele, no todo ou em parte, e também publicá-lo ou apresentá-lo como se fosse de sua autoria, sem autorização prévia e por escrito do autor. A violação pode gerar responsabilização civil e criminal.
+<sub>**Uso do app:** é livre e gratuito para você criar os orçamentos do seu próprio trabalho.</sub>
 
-Sugestões e correções são bem-vindas, desde que mantidos os créditos do autor.
+<sub>**É proibido** comercializar, revender, sublicenciar ou redistribuir este projeto, ou cópias dele, no todo ou em parte, e também publicá-lo ou apresentá-lo como se fosse de sua autoria, sem autorização prévia e por escrito do autor. A violação pode gerar responsabilização civil e criminal.</sub>
 
-Feito por Saulo (saulomgg) · parte do ecossistema S0m9Net
+<sub>Sugestões e correções são bem-vindas, desde que mantidos os créditos do autor.</sub>
 
-Site do criador · Telegram · LinkedIn
+---
+
+<div align="center">
+
+Feito por **[Saulo (saulomgg)](https://saulomgg.github.io)** · parte do ecossistema **S0m9Net**
+
+[Site do criador](https://saulomgg.github.io) · [Telegram](https://t.me/S0M9Net) · [LinkedIn](https://www.linkedin.com/in/saulomgg/)
+
+```
+┌─────────────────────────────────────────────┐
+│  [ SYSTEM ]  Orçamento Express · gratuito   │
+│  [ STATUS ]  Online · sem cadastro          │
+│  [ NEXT   ]  Sempre melhorando...           │
+└─────────────────────────────────────────────┘
+```
+
+</div>
