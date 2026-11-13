@@ -129,9 +129,9 @@ O Orçamento Express é gratuito e independente. Uma contribuição voluntária,
 
 <div align="center">
 
-Feito por **[Saulo (saulomgg)](https://saulomgg.github.io)** .
+Feito por **[Saulo (saulomgg)](https://saulomgg.github.io)** · parte do ecossistema **S0m9Net**
 
-[Site do criador](https://saulomgg.github.io) · [Telegram]() · [LinkedIn](https://www.linkedin.com/in/saulomgg/)
+[Site do criador](https://saulomgg.github.io) · [Telegram](https://t.me/S0M9Net) · [LinkedIn](https://www.linkedin.com/in/saulomgg/)
 
 ```
 ┌─────────────────────────────────────────────┐

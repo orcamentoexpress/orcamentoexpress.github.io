@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { CompanyProfile, PDFTheme, Quote, QuoteStatus } from '../../types';
 import { TemplateRenderer } from './templates/TemplateRenderer';
 import { generatePixPayload, generatePixQRCodeDataUrl } from '../../services/pix';
-import { downloadPdfFromElement, getPdfFileFromElement, formatCurrencyBRL, formatDateBR } from '../../services/pdfGenerator';
+import { downloadPdfFromQuote, getPdfFileFromQuote, formatCurrencyBRL, formatDateBR } from '../../services/pdfGenerator';
 import confetti from 'canvas-confetti';
 import {
   X,
@@ -136,11 +136,10 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
   };
 
   const handleDownloadPdf = async () => {
-    if (!previewSheetRef.current) return;
     try {
       setIsGeneratingPdf(true);
       const filename = `Orcamento_${quote.code}_${quote.clientName.replace(/\s+/g, '_')}.pdf`;
-      await downloadPdfFromElement(previewSheetRef.current, filename);
+      downloadPdfFromQuote({ quote, company, theme: selectedTheme }, filename);
     } catch (err) {
       console.error('Erro ao gerar PDF', err);
     } finally {
@@ -153,11 +152,10 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
   };
 
   const handleSharePdfDirect = async () => {
-    if (!previewSheetRef.current) return;
     try {
       setIsGeneratingPdf(true);
       const filename = `Orcamento_${quote.code}.pdf`;
-      const file = await getPdfFileFromElement(previewSheetRef.current, filename);
+      const file = getPdfFileFromQuote({ quote, company, theme: selectedTheme }, filename);
 
       if (navigator.share && canShareFiles) {
         await navigator.share({
@@ -167,14 +165,14 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
         });
         onUpdateStatus(quote.id, 'enviado');
       } else {
-        await downloadPdfFromElement(previewSheetRef.current, filename);
+        downloadPdfFromQuote({ quote, company, theme: selectedTheme }, filename);
         openWhatsAppWithMessage();
       }
     } catch (err) {
       console.log('Share dismissed or not supported, using download fallback', err);
       try {
         const filename = `Orcamento_${quote.code}.pdf`;
-        await downloadPdfFromElement(previewSheetRef.current, filename);
+        downloadPdfFromQuote({ quote, company, theme: selectedTheme }, filename);
         openWhatsAppWithMessage();
       } catch (fallbackError) {
         console.error('Fallback de PDF também falhou', fallbackError);
@@ -202,13 +200,12 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
   };
 
   const handleSendWhatsAppChat = async () => {
-    if (!previewSheetRef.current) return;
     try {
       setIsGeneratingPdf(true);
       const filename = `Orcamento_${quote.code}.pdf`;
       // O WhatsApp Web não permite anexar um arquivo por wa.me automaticamente.
       // Baixamos o PDF primeiro e abrimos a conversa com a mensagem pronta.
-      await downloadPdfFromElement(previewSheetRef.current, filename);
+      downloadPdfFromQuote({ quote, company, theme: selectedTheme }, filename);
       openWhatsAppWithMessage();
     } catch (err) {
       console.error('Não foi possível preparar o PDF para o WhatsApp', err);
