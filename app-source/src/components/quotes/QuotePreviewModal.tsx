@@ -100,6 +100,13 @@ export const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({
     return () => window.removeEventListener('resize', updateScale);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen && previewContainerRef.current) {
+      previewContainerRef.current.scrollTop = 0;
+      previewContainerRef.current.scrollLeft = 0;
+    }
+  }, [isOpen, quote.id]);
+
   // Sync theme
   useEffect(() => {
     setSelectedTheme(quote.theme || 'modern');

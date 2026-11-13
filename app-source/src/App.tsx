@@ -19,6 +19,10 @@ import { FooterBadge } from './components/FooterBadge';
 export default function App() {
   const [data, setData] = useState<AppData>(() => loadAppData());
   const [currentTab, setCurrentTab] = useState<NavigationTab>('wallet');
+  const [uiTheme, setUiTheme] = useState<'dark' | 'light'>(() => {
+    if (typeof window === 'undefined') return 'dark';
+    return window.localStorage.getItem('orcamento_express_ui_theme') === 'light' ? 'light' : 'dark';
+  });
   
   // Quote Editing state
   const [isEditingQuote, setIsEditingQuote] = useState(false);
@@ -31,6 +35,11 @@ export default function App() {
   useEffect(() => {
     saveAppData(data);
   }, [data]);
+
+  useEffect(() => {
+    window.localStorage.setItem('orcamento_express_ui_theme', uiTheme);
+    document.documentElement.style.colorScheme = uiTheme;
+  }, [uiTheme]);
 
   // Auto-sync with Google Apps Script if enabled
   const triggerAutoSync = async (newData: AppData) => {
@@ -54,6 +63,7 @@ export default function App() {
 
   // Quotes Management Handlers
   const handleOpenCreateQuote = (prefilledClient?: Client) => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
     if (prefilledClient) {
       const newQuote: Quote = {
         id: `orc-${Date.now()}`,
@@ -245,7 +255,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-emerald-500/30">
+    <div className={`min-h-screen ${uiTheme === 'light' ? 'theme-light' : 'bg-slate-950 text-slate-100'} flex flex-col font-sans selection:bg-emerald-500/30`}>
       {/* Offline Connectivity Notification Banner */}
       <OfflineIndicator />
 
@@ -254,6 +264,7 @@ export default function App() {
         currentTab={currentTab}
         onSelectTab={(tab) => {
           setIsEditingQuote(false);
+          window.scrollTo({ top: 0, behavior: 'auto' });
           setCurrentTab(tab);
         }}
         onOpenCreateQuote={() => handleOpenCreateQuote()}
@@ -261,6 +272,8 @@ export default function App() {
         clientsCount={data.clients.length}
         lastSyncedAt={data.cloudSync?.lastSyncedAt}
         company={data.company}
+        theme={uiTheme}
+        onToggleTheme={() => setUiTheme((current) => current === 'dark' ? 'light' : 'dark')}
       />
 
       {/* Main Content Area */}

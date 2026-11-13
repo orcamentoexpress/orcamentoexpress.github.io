@@ -10,8 +10,42 @@
     font-family: var(--font-sans);
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior-y: none;
+    background: #020617;
   }
 }
+
+/* Tema claro: mesma identidade do app, com superfícies claras e contraste suave. */
+.theme-light {
+  color-scheme: light;
+  background: #f3f8f7 !important;
+  color: #163235;
+}
+.theme-light .bg-slate-950 { background-color: #f3f8f7 !important; }
+.theme-light .bg-slate-950\/90 { background-color: rgba(243, 248, 247, 0.94) !important; }
+.theme-light .bg-slate-950\/70 { background-color: rgba(255, 255, 255, 0.86) !important; }
+.theme-light .bg-slate-950\/60 { background-color: rgba(255, 255, 255, 0.76) !important; }
+.theme-light .bg-slate-900 { background-color: #ffffff !important; }
+.theme-light .bg-slate-900\/95 { background-color: rgba(255, 255, 255, 0.96) !important; }
+.theme-light .bg-slate-900\/90 { background-color: rgba(255, 255, 255, 0.92) !important; }
+.theme-light .bg-slate-800 { background-color: #e7f0ef !important; }
+.theme-light .bg-slate-800\/80 { background-color: rgba(231, 240, 239, 0.86) !important; }
+.theme-light .bg-slate-700\/80 { background-color: #d7e5e3 !important; }
+.theme-light .text-white { color: #173b3d !important; }
+.theme-light .text-slate-100,
+.theme-light .text-slate-200 { color: #244548 !important; }
+.theme-light .text-slate-300,
+.theme-light .text-slate-400 { color: #557174 !important; }
+.theme-light .text-slate-500 { color: #6b8587 !important; }
+.theme-light .border-slate-800,
+.theme-light .border-slate-800\/80,
+.theme-light .border-slate-700,
+.theme-light .border-slate-700\/80 { border-color: #d5e4e1 !important; }
+.theme-light .shadow-2xl,
+.theme-light .shadow-lg { box-shadow: 0 18px 45px rgba(24, 77, 75, 0.13) !important; }
+.theme-light input,
+.theme-light textarea,
+.theme-light select { background-color: #ffffff !important; color: #244548 !important; border-color: #cbdedb !important; }
+.theme-light ::-webkit-scrollbar-thumb { background: rgba(46, 113, 108, 0.28); }
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {

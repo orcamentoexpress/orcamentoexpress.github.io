@@ -7,7 +7,9 @@ import {
   Plus,
   Cloud,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { PWAInstallButton } from './PWAInstallButton';
 import { CompanyProfile } from '../types';
@@ -22,6 +24,8 @@ interface NavigationProps {
   clientsCount: number;
   lastSyncedAt?: string;
   company: CompanyProfile;
+  theme: 'dark' | 'light';
+  onToggleTheme: () => void;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
@@ -32,6 +36,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   clientsCount,
   lastSyncedAt,
   company,
+  theme,
+  onToggleTheme,
 }) => {
   const brandName = company.tradingName?.trim() || company.name?.trim() || 'Orçamento Express';
   const brandSecondary = company.tradingName?.trim() && company.name?.trim() && company.tradingName.trim() !== company.name.trim()
@@ -121,6 +127,15 @@ export const Navigation: React.FC<NavigationProps> = ({
 
           {/* Right: PWA Install & Quick Action */}
           <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              className="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700/80 transition"
+              title={theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
+              aria-label={theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
             <PWAInstallButton compact />
 
             <button

@@ -33,7 +33,12 @@ export async function createPdfFromElement(
     useCORS: true,
     logging: false,
     backgroundColor: '#ffffff',
+    width: element.scrollWidth,
+    height: element.scrollHeight,
     windowWidth: element.scrollWidth,
+    windowHeight: element.scrollHeight,
+    scrollX: 0,
+    scrollY: 0,
   });
 
   const imgData = canvas.toDataURL('image/jpeg', 0.95);
@@ -82,10 +87,19 @@ export async function downloadPdfFromElement(
   link.href = url;
   link.download = filename;
   link.rel = 'noopener';
+  link.target = '_blank';
   document.body.appendChild(link);
-  link.click();
+  // Safari/iOS frequentemente ignora o atributo download; abrir o Blob permite
+  // visualizar e salvar o PDF pelo menu nativo do aparelho.
+  const isAppleMobile = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (isAppleMobile) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  } else {
+    link.click();
+  }
   link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  window.setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
 /**
